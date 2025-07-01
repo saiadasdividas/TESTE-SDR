@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Treinamento SDR - Embalagens Conceito</title>
+<!-- Firebase SDK -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-app-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-firestore-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-auth-compat.min.js"></script>
 <style>
 * {
 margin: 0;
@@ -490,39 +494,186 @@ Dia 30: E-mail de reativação"></textarea>
 </div>
 
 <script>
+// Configuração do Firebase - SUBSTITUA PELAS SUAS CREDENCIAIS
+const firebaseConfig = {
+    apiKey: "SUA_API_KEY_AQUI",
+    authDomain: "SEU_PROJECT_ID.firebaseapp.com",
+    projectId: "SEU_PROJECT_ID",
+    storageBucket: "SEU_PROJECT_ID.appspot.com",
+    messagingSenderId: "SEU_SENDER_ID",
+    appId: "SEU_APP_ID"
+};
+
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Variáveis globais
+let currentSDR = null;
+let sessionId = null;
+let trainingStartTime = null;
+
+// Inicializar SDR
+function initializeSDR() {
+    const name = document.getElementById('sdrName').value.trim();
+    const email = document.getElementById('sdrEmail').value.trim();
+    
+    if (!name || !email) {
+        alert('Por favor, preencha seu nome e e-mail para continuar.');
+        return;
+    }
+    
+    // Validar e-mail
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('Por favor, insira um e-mail válido.');
+        return;
+    }
+    
+    currentSDR = { name, email };
+    sessionId = generateSessionId();
+    trainingStartTime = new Date();
+    
+    // Salvar início da sessão no Firebase
+    saveToFirebase('session_start', {
+        sdrName: name,
+        sdrEmail: email,
+        sessionId: sessionId,
+        startTime: trainingStartTime,
+        status: 'iniciado'
+    });
+    
+    // Atualizar interface
+    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('sdrInfo').style.display = 'block';
+    document.getElementById('currentSDR').textContent = name;
+    document.getElementById('startTime').textContent = trainingStartTime.toLocaleString('pt-BR');
+    
+    // Habilitar treinamento
+    enableTraining();
+}
+
+// Logout do SDR
+function logoutSDR() {
+    if (confirm('Tem certeza que deseja finalizar a sessão? O progresso será salvo.')) {
+        saveToFirebase('session_end', {
+            sessionId: sessionId,
+            endTime: new Date(),
+            status: 'finalizado'
+        });
+        
+        location.reload();
+    }
+}
+
+// Gerar ID único da sessão
+function generateSessionId() {
+    return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+}
+
+// Habilitar treinamento após login
+function enableTraining() {
+    const textareas = document.querySelectorAll('textarea');
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    
+    // Habilitar textareas e adicionar listeners
+    textareas.forEach((textarea, index) => {
+        textarea.disabled = false;
+        textarea.addEventListener('input', function() {
+            const cardTitle = this.closest('.card').querySelector('.card-header h3').textContent;
+            const questionLabel = this.previousElementSibling.textContent;
+            
+            // Salvar resposta em tempo real
+            saveToFirebase('answer', {
+                sessionId: sessionId,
+                cardTitle: cardTitle,
+                question: questionLabel,
+                answer: this.value,
+                timestamp: new Date(),
+                answerIndex: index
+            });
+        });
+    });
+    
+    // Habilitar checkboxes
+    checkboxes.forEach(checkbox => {
+        checkbox.disabled = false;
+    });
+}
+
+// Salvar dados no Firebase
+async function saveToFirebase(type, data) {
+    try {
+        await db.collection('sdr_training').add({
+            type: type,
+            data: data,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        console.log('Dados salvos com sucesso:', type);
+    } catch (error) {
+        console.error('Erro ao salvar dados:', error);
+    }
+}
+
+// Atualizar progresso
 function updateProgress() {
-const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-const checked = document.querySelectorAll('input[type="checkbox"]:checked');
-const progress = Math.round((checked.length / checkboxes.length) * 100);
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+    const progress = Math.round((checked.length / checkboxes.length) * 100);
 
-document.getElementById('progressFill').style.width = progress + '%';
-document.getElementById('progressText').textContent = progress + '% Concluído';
+    document.getElementById('progressFill').style.width = progress + '%';
+    document.getElementById('progressText').textContent = progress + '% Concluído';
 
-if (progress === 100) {
-setTimeout(() => {
-alert('🎉 Parabéns! Você concluiu o treinamento SDR! Agora você está pronto para prospectar lojistas de forma eficaz!');
-}, 500);
+    // Salvar progresso no Firebase
+    if (currentSDR) {
+        saveToFirebase('progress', {
+            sessionId: sessionId,
+            progress: progress,
+            completedItems: checked.length,
+            totalItems: checkboxes.length,
+            timestamp: new Date()
+        });
+    }
+
+    // Treinamento concluído
+    if (progress === 100) {
+        setTimeout(() => {
+            saveToFirebase('training_completed', {
+                sessionId: sessionId,
+                completionTime: new Date(),
+                totalDuration: new Date() - trainingStartTime
+            });
+            
+            alert('🎉 Parabéns! Você concluiu o treinamento SDR! Suas respostas foram enviadas para avaliação.');
+        }, 500);
+    }
 }
-}
 
-// Auto-save textarea content
+// Inicializar quando a página carrega
 document.addEventListener('DOMContentLoaded', function() {
-const textareas = document.querySelectorAll('textarea');
-textareas.forEach(textarea => {
-const id = 'textarea_' + Math.random().toString(36).substr(2, 9);
-textarea.id = id;
-
-// Load saved content
-const saved = localStorage.getItem(id);
-if (saved) {
-textarea.value = saved;
-}
-
-// Save on input
-textarea.addEventListener('input', function() {
-localStorage.setItem(id, this.value);
+    // Desabilitar treinamento inicialmente
+    const textareas = document.querySelectorAll('textarea');
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    
+    textareas.forEach(textarea => {
+        textarea.disabled = true;
+        textarea.placeholder = 'Faça login para começar o treinamento...';
+    });
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.disabled = true;
+    });
 });
-});
+
+// Salvar estado quando a página é fechada
+window.addEventListener('beforeunload', function() {
+    if (currentSDR) {
+        saveToFirebase('session_pause', {
+            sessionId: sessionId,
+            pauseTime: new Date(),
+            status: 'pausado'
+        });
+    }
 });
 </script>
 </body>
