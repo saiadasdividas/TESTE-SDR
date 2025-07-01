@@ -878,6 +878,11 @@ function openModule(moduleNum) {
     document.getElementById('trainingModal').style.display = 'block';
 }
 
+// Fechar modal
+function closeModal() {
+    document.getElementById('trainingModal').style.display = 'none';
+}
+
 // Adicionar listeners aos textareas
 function addTextareaListeners(moduleNum) {
     const textareas = document.querySelectorAll(`textarea[data-module="${moduleNum}"]`);
