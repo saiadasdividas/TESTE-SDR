@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Treinamento SDR - Embalagens Conceito</title>
+<title>Admin - Treinamento SDR</title>
 <!-- Firebase SDK -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-app-compat.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-firestore-compat.min.js"></script>
@@ -16,297 +16,292 @@ box-sizing: border-box;
 
 body {
 font-family: 'Arial', sans-serif;
-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
 min-height: 100vh;
 color: #333;
 }
 
 .container {
-max-width: 1200px;
+max-width: 1400px;
 margin: 0 auto;
 padding: 20px;
 }
 
 .header {
-text-align: center;
-margin-bottom: 40px;
 background: white;
 padding: 30px;
 border-radius: 20px;
 box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+margin-bottom: 30px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+flex-wrap: wrap;
 }
 
 .header h1 {
-color: #4a5568;
-font-size: 2.5rem;
-margin-bottom: 10px;
-font-weight: bold;
+color: #1a365d;
+font-size: 2.2rem;
+margin-bottom: 5px;
 }
 
 .header p {
 color: #718096;
-font-size: 1.2rem;
+font-size: 1.1rem;
 }
 
-/* Login Section */
-.login-section {
-margin-top: 20px;
-padding: 20px;
-background: #f8fafc;
-border-radius: 15px;
-border: 2px solid #e2e8f0;
-}
-
-.login-form {
+.admin-login {
 display: flex;
 gap: 15px;
-justify-content: center;
 align-items: center;
-flex-wrap: wrap;
-margin-bottom: 15px;
 }
 
-.login-form input {
-padding: 12px 15px;
-border-radius: 10px;
+.admin-login input {
+padding: 10px 15px;
 border: 2px solid #e2e8f0;
-font-size: 16px;
-min-width: 200px;
+border-radius: 8px;
+font-size: 14px;
 }
 
-.login-form input:focus {
+.admin-login input:focus {
 outline: none;
-border-color: #667eea;
+border-color: #1a365d;
 }
 
-.sdr-info {
-display: none;
-text-align: center;
-padding: 15px;
-background: #e6fffa;
-border-radius: 10px;
-border: 2px solid #38b2ac;
-}
-
-.cards-grid {
+.stats-grid {
 display: grid;
-grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 gap: 20px;
-margin-bottom: 40px;
-}
-
-.card {
-background: white;
-border-radius: 20px;
-padding: 0;
-box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-transition: all 0.3s ease;
-overflow: hidden;
-cursor: pointer;
-min-height: 200px;
-display: flex;
-flex-direction: column;
-}
-
-.card:hover {
-transform: translateY(-5px);
-box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-}
-
-.card.completed {
-border: 3px solid #38a169;
-}
-
-.card.completed .card-header {
-background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
-}
-
-.card-header {
-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-color: white;
-padding: 25px;
-text-align: center;
-}
-
-.card-header h3 {
-font-size: 1.3rem;
-font-weight: bold;
-margin-bottom: 8px;
-}
-
-.card-description {
-font-size: 0.9rem;
-opacity: 0.95;
-}
-
-.card-content {
-padding: 25px;
-flex: 1;
-display: flex;
-flex-direction: column;
-justify-content: center;
-text-align: center;
-}
-
-.card-status {
-font-size: 1.1rem;
-color: #718096;
-margin-bottom: 15px;
-}
-
-.card.completed .card-status {
-color: #38a169;
-font-weight: bold;
-}
-
-.card-disabled {
-opacity: 0.6;
-cursor: not-allowed;
-}
-
-.card-disabled:hover {
-transform: none;
-box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-}
-
-.progress-section {
-background: white;
-border-radius: 20px;
-padding: 30px;
-box-shadow: 0 15px 35px rgba(0,0,0,0.1);
 margin-bottom: 30px;
 }
 
-.progress-section h2 {
-color: #4a5568;
-margin-bottom: 20px;
-text-align: center;
-}
-
-.progress-bar {
-width: 100%;
-height: 20px;
-background: #e2e8f0;
-border-radius: 10px;
-overflow: hidden;
-margin-bottom: 15px;
-}
-
-.progress-fill {
-height: 100%;
-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-width: 0%;
-transition: width 0.5s ease;
-border-radius: 10px;
-}
-
-.progress-text {
-text-align: center;
-color: #718096;
-font-weight: bold;
-font-size: 1.1rem;
-}
-
-/* Modal Styles */
-.modal {
-display: none;
-position: fixed;
-z-index: 1000;
-left: 0;
-top: 0;
-width: 100%;
-height: 100%;
-background-color: rgba(0,0,0,0.8);
-animation: fadeIn 0.3s ease;
-}
-
-.modal-content {
-background-color: white;
-margin: 5% auto;
-padding: 0;
-border-radius: 20px;
-width: 90%;
-max-width: 800px;
-max-height: 85vh;
-overflow-y: auto;
-animation: slideIn 0.3s ease;
-}
-
-.modal-header {
-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-color: white;
+.stat-card {
+background: white;
 padding: 25px;
-border-radius: 20px 20px 0 0;
-display: flex;
-justify-content: space-between;
-align-items: center;
+border-radius: 15px;
+box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+text-align: center;
 }
 
-.modal-header h2 {
-margin: 0;
-font-size: 1.5rem;
-}
-
-.close {
-color: white;
-font-size: 28px;
+.stat-number {
+font-size: 2.5rem;
 font-weight: bold;
+color: #1a365d;
+margin-bottom: 5px;
+}
+
+.stat-label {
+color: #718096;
+font-size: 1rem;
+}
+
+.filters-section {
+background: white;
+padding: 20px;
+border-radius: 15px;
+box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+margin-bottom: 30px;
+}
+
+.filters-row {
+display: flex;
+gap: 15px;
+align-items: center;
+flex-wrap: wrap;
+}
+
+.filter-group {
+display: flex;
+flex-direction: column;
+gap: 5px;
+}
+
+.filter-group label {
+font-size: 0.9rem;
+color: #4a5568;
+font-weight: bold;
+}
+
+.filter-group select,
+.filter-group input {
+padding: 8px 12px;
+border: 2px solid #e2e8f0;
+border-radius: 8px;
+font-size: 14px;
+}
+
+.sdr-list {
+background: white;
+border-radius: 15px;
+box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+overflow: hidden;
+}
+
+.sdr-item {
+border-bottom: 1px solid #e2e8f0;
+transition: background 0.2s ease;
 cursor: pointer;
 }
 
-.close:hover {
-opacity: 0.8;
+.sdr-item:hover {
+background: #f7fafc;
 }
 
-.modal-body {
-padding: 30px;
+.sdr-item:last-child {
+border-bottom: none;
 }
 
-.practice-area {
-margin-bottom: 25px;
-}
-
-.practice-area label {
-display: block;
-margin-bottom: 10px;
-font-weight: bold;
-color: #2d3748;
-font-size: 1.1rem;
-}
-
-.practice-area textarea {
-width: 100%;
-min-height: 120px;
-padding: 15px;
-border: 2px solid #e2e8f0;
-border-radius: 10px;
-font-family: inherit;
-font-size: 14px;
-transition: border-color 0.3s ease;
-resize: vertical;
-}
-
-.practice-area textarea:focus {
-outline: none;
-border-color: #667eea;
-box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.modal-footer {
-padding: 20px 30px;
-border-top: 1px solid #e2e8f0;
+.sdr-header {
+padding: 20px;
 display: flex;
 justify-content: space-between;
 align-items: center;
 }
 
-.btn {
+.sdr-info {
+display: flex;
+align-items: center;
+gap: 15px;
+}
+
+.sdr-avatar {
+width: 50px;
+height: 50px;
+border-radius: 50%;
 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+display: flex;
+align-items: center;
+justify-content: center;
+color: white;
+font-weight: bold;
+font-size: 1.2rem;
+}
+
+.sdr-details h3 {
+color: #1a365d;
+margin-bottom: 5px;
+font-size: 1.1rem;
+}
+
+.sdr-meta {
+color: #718096;
+font-size: 0.9rem;
+}
+
+.sdr-progress {
+display: flex;
+align-items: center;
+gap: 15px;
+}
+
+.progress-circle {
+width: 60px;
+height: 60px;
+border-radius: 50%;
+background: conic-gradient(#38a169 0deg, #38a169 0deg, #e2e8f0 0deg);
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: bold;
+color: #1a365d;
+position: relative;
+}
+
+.status-badge {
+padding: 6px 12px;
+border-radius: 20px;
+font-size: 0.8rem;
+font-weight: bold;
+}
+
+.status-active {
+background: #c6f6d5;
+color: #22543d;
+}
+
+.status-completed {
+background: #bee3f8;
+color: #1a365d;
+}
+
+.status-paused {
+background: #fed7d7;
+color: #742a2a;
+}
+
+.sdr-answers {
+padding: 0 20px 20px;
+display: none;
+}
+
+.sdr-answers.expanded {
+display: block;
+}
+
+.module-group {
+background: #f7fafc;
+border-radius: 10px;
+margin-bottom: 20px;
+overflow: hidden;
+}
+
+.module-header {
+background: #edf2f7;
+padding: 15px 20px;
+border-bottom: 1px solid #e2e8f0;
+}
+
+.module-title {
+color: #1a365d;
+font-weight: bold;
+margin-bottom: 5px;
+}
+
+.module-meta {
+color: #718096;
+font-size: 0.9rem;
+}
+
+.answer-item {
+padding: 15px 20px;
+border-bottom: 1px solid #e2e8f0;
+}
+
+.answer-item:last-child {
+border-bottom: none;
+}
+
+.question-text {
+color: #2d3748;
+font-weight: bold;
+margin-bottom: 8px;
+font-size: 0.95rem;
+}
+
+.answer-text {
+color: #4a5568;
+line-height: 1.6;
+background: white;
+padding: 12px;
+border-radius: 8px;
+border-left: 4px solid #667eea;
+}
+
+.answer-meta {
+color: #a0aec0;
+font-size: 0.8rem;
+margin-top: 8px;
+display: flex;
+justify-content: space-between;
+}
+
+.btn {
+background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
 color: white;
 border: none;
-padding: 12px 25px;
-border-radius: 10px;
-font-size: 16px;
+padding: 10px 20px;
+border-radius: 8px;
+font-size: 14px;
 font-weight: bold;
 cursor: pointer;
 transition: transform 0.2s ease;
@@ -316,194 +311,169 @@ transition: transform 0.2s ease;
 transform: translateY(-2px);
 }
 
-.btn-secondary {
-background: #718096;
+.btn-export {
+background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
 }
 
-.btn:disabled {
-background: #a0aec0;
-cursor: not-allowed;
-transform: none;
+.btn-refresh {
+background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
 }
 
-.completion-status {
-font-size: 0.9rem;
+.loading {
+text-align: center;
+padding: 40px;
 color: #718096;
 }
 
-@keyframes fadeIn {
-from { opacity: 0; }
-to { opacity: 1; }
+.loading-spinner {
+border: 4px solid #e2e8f0;
+border-top: 4px solid #1a365d;
+border-radius: 50%;
+width: 40px;
+height: 40px;
+animation: spin 1s linear infinite;
+margin: 0 auto 20px;
 }
 
-@keyframes slideIn {
-from { transform: translateY(-50px); opacity: 0; }
-to { transform: translateY(0); opacity: 1; }
+@keyframes spin {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}
+
+.no-data {
+text-align: center;
+padding: 40px;
+color: #a0aec0;
+}
+
+.expand-btn {
+background: none;
+border: none;
+color: #1a365d;
+cursor: pointer;
+font-size: 1.2rem;
+padding: 5px;
+border-radius: 5px;
+transition: background 0.2s ease;
+}
+
+.expand-btn:hover {
+background: #edf2f7;
+}
+
+.admin-section {
+display: none;
+}
+
+.admin-section.active {
+display: block;
 }
 
 @media (max-width: 768px) {
-.container {
-padding: 15px;
+.header {
+flex-direction: column;
+gap: 20px;
+text-align: center;
 }
 
-.header h1 {
-font-size: 2rem;
+.stats-grid {
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
-.cards-grid {
-grid-template-columns: 1fr;
-gap: 15px;
-}
-
-.login-form {
+.filters-row {
 flex-direction: column;
 align-items: stretch;
 }
 
-.login-form input {
-min-width: auto;
+.sdr-header {
+flex-direction: column;
+gap: 15px;
+align-items: flex-start;
 }
 
-.modal-content {
-width: 95%;
-margin: 10% auto;
+.sdr-progress {
+align-self: flex-end;
 }
 }
 </style>
 </head>
 <body>
 <div class="container">
+<!-- Login Admin -->
+<div id="adminLogin" class="header">
+<div>
+<h1>🔐 Acesso Administrativo</h1>
+<p>Faça login para acessar o painel de controle</p>
+</div>
+<div class="admin-login">
+<input type="password" id="adminPassword" placeholder="Senha de administrador">
+<button class="btn" onclick="loginAdmin()">Entrar</button>
+</div>
+</div>
+
+<!-- Painel Admin -->
+<div id="adminPanel" class="admin-section">
 <div class="header">
-<h1>🎯 Treinamento SDR</h1>
-<p>Embalagens Conceito - Dominando a Arte da Prospecção B2B</p>
-
-<div class="login-section">
-<div id="loginForm" class="login-form">
-<input type="text" id="sdrName" placeholder="Seu nome completo">
-<input type="email" id="sdrEmail" placeholder="Seu e-mail">
-<button class="btn" onclick="initializeSDR()">Iniciar Treinamento</button>
+<div>
+<h1>📊 Painel Administrativo</h1>
+<p>Treinamento SDR - Monitoramento em Tempo Real</p>
 </div>
-<div id="sdrInfo" class="sdr-info">
-<p><strong>SDR:</strong> <span id="currentSDRName"></span> | <strong>Iniciado em:</strong> <span id="startTime"></span></p>
-<button class="btn btn-secondary" onclick="logoutSDR()">Finalizar Sessão</button>
-</div>
+<div style="display: flex; gap: 10px;">
+<button class="btn btn-refresh" onclick="loadData()">🔄 Atualizar</button>
+<button class="btn btn-export" onclick="exportData()">📊 Exportar</button>
+<button class="btn" onclick="logoutAdmin()">Sair</button>
 </div>
 </div>
 
-<div class="progress-section">
-<h2>📈 Seu Progresso no Treinamento</h2>
-<div class="progress-bar">
-<div class="progress-fill" id="progressFill"></div>
+<!-- Estatísticas -->
+<div class="stats-grid">
+<div class="stat-card">
+<div class="stat-number" id="totalSDRs">0</div>
+<div class="stat-label">SDRs Cadastrados</div>
 </div>
-<div class="progress-text" id="progressText">Faça login para começar</div>
+<div class="stat-card">
+<div class="stat-number" id="activeSessions">0</div>
+<div class="stat-label">Sessões Ativas</div>
 </div>
-
-<div class="cards-grid" id="cardsGrid">
-<div class="card card-disabled" data-module="1">
-<div class="card-header">
-<h3>🏪 Identificação de Oportunidades</h3>
-<div class="card-description">Reconheça sinais de que lojistas precisam de fornecedores</div>
+<div class="stat-card">
+<div class="stat-number" id="completedTrainings">0</div>
+<div class="stat-label">Treinamentos Concluídos</div>
 </div>
-<div class="card-content">
-<div class="card-status">Clique para iniciar</div>
-<p>Aprenda a identificar oportunidades de negócio com lojistas e distribuidores.</p>
-</div>
-</div>
-
-<div class="card card-disabled" data-module="2">
-<div class="card-header">
-<h3>🎯 Perfil do Cliente Ideal</h3>
-<div class="card-description">Defina seu público-alvo perfeito</div>
-</div>
-<div class="card-content">
-<div class="card-status">Clique para iniciar</div>
-<p>Construa o perfil detalhado dos lojistas ideais para seu produto.</p>
+<div class="stat-card">
+<div class="stat-number" id="totalAnswers">0</div>
+<div class="stat-label">Respostas Coletadas</div>
 </div>
 </div>
 
-<div class="card card-disabled" data-module="3">
-<div class="card-header">
-<h3>📞 Técnicas de Qualificação</h3>
-<div class="card-description">Domine a metodologia BANT</div>
+<!-- Filtros -->
+<div class="filters-section">
+<div class="filters-row">
+<div class="filter-group">
+<label>Filtrar por Status:</label>
+<select id="statusFilter" onchange="applyFilters()">
+<option value="">Todos</option>
+<option value="ativo">Ativo</option>
+<option value="concluído">Concluído</option>
+<option value="pausado">Pausado</option>
+</select>
 </div>
-<div class="card-content">
-<div class="card-status">Clique para iniciar</div>
-<p>Aprenda a qualificar prospects usando Budget, Authority, Need e Timeline.</p>
+<div class="filter-group">
+<label>Buscar SDR:</label>
+<input type="text" id="searchSDR" placeholder="Nome ou e-mail" oninput="applyFilters()">
 </div>
-</div>
-
-<div class="card card-disabled" data-module="4">
-<div class="card-header">
-<h3>📧 Scripts de E-mail</h3>
-<div class="card-description">Crie e-mails que convertem</div>
-</div>
-<div class="card-content">
-<div class="card-status">Clique para iniciar</div>
-<p>Desenvolva templates eficazes para diferentes momentos da prospecção.</p>
-</div>
-</div>
-
-<div class="card card-disabled" data-module="5">
-<div class="card-header">
-<h3>☎️ Scripts de Cold Call</h3>
-<div class="card-description">Domine as ligações de prospecção</div>
-</div>
-<div class="card-content">
-<div class="card-status">Clique para iniciar</div>
-<p>Crie abordagens eficazes e trate objeções com confiança.</p>
-</div>
-</div>
-
-<div class="card card-disabled" data-module="6">
-<div class="card-header">
-<h3>🔍 Pesquisa e Prospecting</h3>
-<div class="card-description">Encontre prospects qualificados</div>
-</div>
-<div class="card-content">
-<div class="card-status">Clique para iniciar</div>
-<p>Domine técnicas de pesquisa para encontrar lojistas ideais.</p>
-</div>
-</div>
-
-<div class="card card-disabled" data-module="7">
-<div class="card-header">
-<h3>🛡️ Tratamento de Objeções</h3>
-<div class="card-description">Transforme "não" em oportunidade</div>
-</div>
-<div class="card-content">
-<div class="card-status">Clique para iniciar</div>
-<p>Aprenda a lidar com as objeções mais comuns dos lojistas.</p>
-</div>
-</div>
-
-<div class="card card-disabled" data-module="8">
-<div class="card-header">
-<h3>🔄 Follow-up Estratégico</h3>
-<div class="card-description">Converta prospects ao longo do tempo</div>
-</div>
-<div class="card-content">
-<div class="card-status">Clique para iniciar</div>
-<p>Desenvolva uma estratégia sistemática de acompanhamento.</p>
-</div>
+<div class="filter-group">
+<label>Data:</label>
+<input type="date" id="dateFilter" onchange="applyFilters()">
 </div>
 </div>
 </div>
 
-<!-- Modal -->
-<div id="trainingModal" class="modal">
-<div class="modal-content">
-<div class="modal-header">
-<h2 id="modalTitle">Módulo de Treinamento</h2>
-<span class="close" onclick="closeModal()">&times;</span>
+<!-- Lista de SDRs -->
+<div class="sdr-list" id="sdrList">
+<div class="loading">
+<div class="loading-spinner"></div>
+<p>Carregando dados...</p>
 </div>
-<div class="modal-body" id="modalBody">
-<!-- Conteúdo será inserido dinamicamente -->
-</div>
-<div class="modal-footer">
-<div class="completion-status" id="completionStatus">
-<span id="answeredCount">0</span> de <span id="totalQuestions">0</span> perguntas respondidas
-</div>
-<button class="btn" id="completeBtn" onclick="completeModule()" disabled>Concluir Módulo</button>
 </div>
 </div>
 </div>
@@ -524,385 +494,290 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // Variáveis globais
-let currentSDR = null;
-let sessionId = null;
-let trainingStartTime = null;
-let currentModule = null;
-let completedModules = [];
+let allData = [];
+let sdrData = {};
+const ADMIN_PASSWORD = "admin123"; // Altere para sua senha
 
-// Dados dos módulos
-const moduleData = {
-    1: {
-        title: "🏪 Identificação de Oportunidades",
-        questions: [
-            {
-                label: "Liste 3 indicadores de que um lojista pode precisar de embalagens:",
-                placeholder: "Ex: Estoque baixo visível, promoções em embalagens antigas, expansão da loja..."
-            }
-        ]
-    },
-    2: {
-        title: "🎯 Perfil do Cliente Ideal",
-        questions: [
-            {
-                label: "Descreva o perfil do lojista ideal para seu produto:",
-                placeholder: "Ex: Loja de doces há mais de 2 anos, vende entre 500-2000 unidades/mês, localizada em shopping..."
-            },
-            {
-                label: "Quais são as principais dores desse lojista?",
-                placeholder: "Ex: Dificuldade para encontrar fornecedores confiáveis, preços competitivos, variedade..."
-            }
-        ]
-    },
-    3: {
-        title: "📞 Técnicas de Qualificação",
-        questions: [
-            {
-                label: "Perguntas para qualificar ORÇAMENTO:",
-                placeholder: "Ex: Qual o volume mensal de embalagens que vocês trabalham? Vocês já têm um orçamento definido?"
-            },
-            {
-                label: "Perguntas para identificar AUTORIDADE:",
-                placeholder: "Ex: Quem toma as decisões de compra na loja? Vocês têm um processo de aprovação?"
-            },
-            {
-                label: "Perguntas para identificar NECESSIDADE:",
-                placeholder: "Ex: Como vocês escolhem seus fornecedores atuais? Têm alguma dificuldade?"
-            }
-        ]
-    },
-    4: {
-        title: "📧 Scripts de E-mail",
-        questions: [
-            {
-                label: "E-mail de primeiro contato para loja de doces:",
-                placeholder: "Assunto: Novas oportunidades para sua loja\nOlá [Nome],\n\nVi que vocês têm uma loja muito bem avaliada..."
-            },
-            {
-                label: "E-mail de follow-up (sem resposta):",
-                placeholder: "Assunto: Re: Parceria em embalagens\nOlá [Nome],\n\nSei que devem estar ocupados..."
-            }
-        ]
-    },
-    5: {
-        title: "☎️ Scripts de Cold Call",
-        questions: [
-            {
-                label: "Abertura para lojista:",
-                placeholder: "Olá, [Nome]! Aqui é [Seu Nome] da Embalagens Conceito. Estou ligando porque..."
-            },
-            {
-                label: "Tratamento de objeção - 'Já temos fornecedor':",
-                placeholder: "Entendo perfeitamente! A maioria dos nossos clientes também já tinham fornecedores..."
-            }
-        ]
-    },
-    6: {
-        title: "🔍 Pesquisa e Prospecting",
-        questions: [
-            {
-                label: "Onde encontrar lojistas qualificados:",
-                placeholder: "Ex: Google Maps (lojas de doces + cidade), redes sociais, associações comerciais..."
-            },
-            {
-                label: "Informações para coletar antes do contato:",
-                placeholder: "Ex: Tempo de mercado, tamanho da loja, se já revendem embalagens..."
-            }
-        ]
-    },
-    7: {
-        title: "🛡️ Tratamento de Objeções",
-        questions: [
-            {
-                label: "Objeção: 'Seus preços são muito altos'",
-                placeholder: "Entendo sua preocupação com o investimento. Posso te mostrar como nossos clientes recuperam..."
-            },
-            {
-                label: "Objeção: 'Não temos tempo agora'",
-                placeholder: "Sei que vocês estão sempre ocupados, é sinal de que a loja vai bem! Que tal agendarmos..."
-            }
-        ]
-    },
-    8: {
-        title: "🔄 Follow-up Estratégico",
-        questions: [
-            {
-                label: "Cronograma de follow-up (dias após primeiro contato):",
-                placeholder: "Dia 3: E-mail com case de sucesso\nDia 7: Ligação de follow-up..."
-            },
-            {
-                label: "Como adicionar valor em cada follow-up:",
-                placeholder: "Ex: Compartilhar tendências do setor, cases de clientes similares, dicas de vendas..."
-            }
-        ]
-    }
-};
-
-// Inicializar SDR
-function initializeSDR() {
-    const name = document.getElementById('sdrName').value.trim();
-    const email = document.getElementById('sdrEmail').value.trim();
-    
-    if (!name || !email) {
-        alert('Por favor, preencha seu nome e e-mail para continuar.');
-        return;
-    }
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        alert('Por favor, insira um e-mail válido.');
-        return;
-    }
-    
-    currentSDR = { name, email };
-    sessionId = generateSessionId();
-    trainingStartTime = new Date();
-    
-    // Salvar início da sessão
-    saveToFirebase('session_start', {
-        sdrName: name,
-        sdrEmail: email,
-        sessionId: sessionId,
-        startTime: trainingStartTime,
-        status: 'iniciado'
-    });
-    
-    // Atualizar interface
-    document.getElementById('loginForm').style.display = 'none';
-    document.getElementById('sdrInfo').style.display = 'block';
-    document.getElementById('currentSDRName').textContent = name;
-    document.getElementById('startTime').textContent = trainingStartTime.toLocaleString('pt-BR');
-    document.getElementById('progressText').textContent = '0% Concluído - Clique em um módulo para começar';
-    
-    // Habilitar cards
-    enableTraining();
-}
-
-// Logout do SDR
-function logoutSDR() {
-    if (confirm('Tem certeza que deseja finalizar a sessão? O progresso será salvo.')) {
-        saveToFirebase('session_end', {
-            sessionId: sessionId,
-            endTime: new Date(),
-            status: 'finalizado'
-        });
-        location.reload();
-    }
-}
-
-// Gerar ID único da sessão
-function generateSessionId() {
-    return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-}
-
-// Habilitar treinamento
-function enableTraining() {
-    const cards = document.querySelectorAll('.card');
-    cards.forEach(card => {
-        card.classList.remove('card-disabled');
-        card.addEventListener('click', () => {
-            const moduleNum = parseInt(card.dataset.module);
-            openModule(moduleNum);
-        });
-    });
-}
-
-// Abrir módulo
-function openModule(moduleNum) {
-    if (!currentSDR) {
-        alert('Faça login primeiro!');
-        return;
-    }
-    
-    currentModule = moduleNum;
-    const module = moduleData[moduleNum];
-    
-    document.getElementById('modalTitle').textContent = module.title;
-    
-    const modalBody = document.getElementById('modalBody');
-    modalBody.innerHTML = '';
-    
-    module.questions.forEach((question, index) => {
-        const questionDiv = document.createElement('div');
-        questionDiv.className = 'practice-area';
-        questionDiv.innerHTML = `
-            <label>${question.label}</label>
-            <textarea 
-                id="question_${moduleNum}_${index}" 
-                placeholder="${question.placeholder}"
-                data-module="${moduleNum}"
-                data-question="${index}">
-            </textarea>
-        `;
-        modalBody.appendChild(questionDiv);
-    });
-    
-    // Atualizar status de completude
-    updateCompletionStatus(moduleNum);
-    
-    // Adicionar listeners
-    addTextareaListeners(moduleNum);
-    
-    document.getElementById('trainingModal').style.display = 'block';
-}
-
-// Fechar modal
-function closeModal() {
-    document.getElementById('trainingModal').style.display = 'none';
-}
-
-// Adicionar listeners aos textareas
-function addTextareaListeners(moduleNum) {
-    const textareas = document.querySelectorAll(`textarea[data-module="${moduleNum}"]`);
-    textareas.forEach(textarea => {
-        textarea.addEventListener('input', function() {
-            const questionIndex = this.dataset.question;
-            const module = moduleData[moduleNum];
-            
-            saveToFirebase('answer', {
-                sessionId: sessionId,
-                moduleNumber: moduleNum,
-                moduleTitle: module.title,
-                questionIndex: parseInt(questionIndex),
-                question: module.questions[questionIndex].label,
-                answer: this.value,
-                timestamp: new Date()
-            });
-            
-            updateCompletionStatus(moduleNum);
-        });
-    });
-}
-
-// Atualizar status de completude do módulo
-function updateCompletionStatus(moduleNum) {
-    const textareas = document.querySelectorAll(`textarea[data-module="${moduleNum}"]`);
-    const totalQuestions = textareas.length;
-    let answeredCount = 0;
-    
-    textareas.forEach(textarea => {
-        if (textarea.value.trim().length > 10) {
-            answeredCount++;
-        }
-    });
-    
-    document.getElementById('answeredCount').textContent = answeredCount;
-    document.getElementById('totalQuestions').textContent = totalQuestions;
-    
-    const completeBtn = document.getElementById('completeBtn');
-    if (answeredCount === totalQuestions) {
-        completeBtn.disabled = false;
-        completeBtn.textContent = 'Concluir Módulo ✓';
+// Login Admin
+function loginAdmin() {
+    const password = document.getElementById('adminPassword').value;
+    if (password === ADMIN_PASSWORD) {
+        document.getElementById('adminLogin').style.display = 'none';
+        document.getElementById('adminPanel').classList.add('active');
+        loadData();
     } else {
-        completeBtn.disabled = true;
-        completeBtn.textContent = 'Concluir Módulo';
+        alert('Senha incorreta!');
     }
 }
 
-// Completar módulo
-function completeModule() {
-    if (!currentModule) return;
+// Logout Admin
+function logoutAdmin() {
+    document.getElementById('adminLogin').style.display = 'block';
+    document.getElementById('adminPanel').classList.remove('active');
+    document.getElementById('adminPassword').value = '';
+}
+
+// Carregar dados do Firebase
+async function loadData() {
+    try {
+        const snapshot = await db.collection('sdr_training').orderBy('timestamp', 'desc').get();
+        allData = [];
+        
+        snapshot.forEach(doc => {
+            allData.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
+        
+        processData();
+        renderSDRList();
+        updateStats();
+    } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+        document.getElementById('sdrList').innerHTML = '<div class="no-data">Erro ao carregar dados</div>';
+    }
+}
+
+// Processar dados
+function processData() {
+    sdrData = {};
     
-    const textareas = document.querySelectorAll(`textarea[data-module="${currentModule}"]`);
-    let allAnswered = true;
-    
-    textareas.forEach(textarea => {
-        if (textarea.value.trim().length < 10) {
-            allAnswered = false;
+    allData.forEach(item => {
+        if (!item.data) return;
+        
+        const sessionId = item.data.sessionId;
+        if (!sessionId) return;
+        
+        if (!sdrData[sessionId]) {
+            sdrData[sessionId] = {
+                sessionId: sessionId,
+                sdrName: '',
+                sdrEmail: '',
+                startTime: null,
+                status: 'ativo',
+                progress: 0,
+                completedModules: 0,
+                answers: [],
+                modules: {}
+            };
+        }
+        
+        const session = sdrData[sessionId];
+        
+        switch (item.type) {
+            case 'session_start':
+                session.sdrName = item.data.sdrName;
+                session.sdrEmail = item.data.sdrEmail;
+                session.startTime = item.data.startTime;
+                break;
+                
+            case 'answer':
+                session.answers.push({
+                    moduleNumber: item.data.moduleNumber,
+                    moduleTitle: item.data.moduleTitle,
+                    question: item.data.question,
+                    answer: item.data.answer,
+                    timestamp: item.data.timestamp
+                });
+                
+                if (!session.modules[item.data.moduleNumber]) {
+                    session.modules[item.data.moduleNumber] = {
+                        title: item.data.moduleTitle,
+                        answers: []
+                    };
+                }
+                
+                session.modules[item.data.moduleNumber].answers.push({
+                    question: item.data.question,
+                    answer: item.data.answer,
+                    timestamp: item.data.timestamp
+                });
+                break;
+                
+            case 'progress':
+                session.progress = item.data.progress;
+                session.completedModules = item.data.completedModules;
+                break;
+                
+            case 'training_completed':
+                session.status = 'concluído';
+                break;
+                
+            case 'session_pause':
+                session.status = 'pausado';
+                break;
         }
     });
+}
+
+// Renderizar lista de SDRs
+function renderSDRList() {
+    const sdrListEl = document.getElementById('sdrList');
+    const sessions = Object.values(sdrData);
     
-    if (!allAnswered) {
-        alert('Por favor, responda todas as perguntas com pelo menos 10 caracteres.');
+    if (sessions.length === 0) {
+        sdrListEl.innerHTML = '<div class="no-data">Nenhum dado encontrado</div>';
         return;
     }
     
-    // Marcar módulo como concluído
-    if (!completedModules.includes(currentModule)) {
-        completedModules.push(currentModule);
+    const html = sessions.map(session => {
+        const initials = session.sdrName.split(' ').map(n => n[0]).join('').toUpperCase();
+        const startDate = session.startTime ? new Date(session.startTime.seconds ? session.startTime.seconds * 1000 : session.startTime).toLocaleString('pt-BR') : 'N/A';
         
-        // Salvar conclusão do módulo
-        saveToFirebase('module_completed', {
-            sessionId: sessionId,
-            moduleNumber: currentModule,
-            moduleTitle: moduleData[currentModule].title,
-            completionTime: new Date()
-        });
-        
-        // Atualizar visual do card
-        const card = document.querySelector(`[data-module="${currentModule}"]`);
-        card.classList.add('completed');
-        card.querySelector('.card-status').textContent = 'Concluído ✓';
-        
-        updateProgress();
-    }
+        return `
+            <div class="sdr-item" data-session="${session.sessionId}">
+                <div class="sdr-header" onclick="toggleAnswers('${session.sessionId}')">
+                    <div class="sdr-info">
+                        <div class="sdr-avatar">${initials}</div>
+                        <div class="sdr-details">
+                            <h3>${session.sdrName}</h3>
+                            <div class="sdr-meta">
+                                ${session.sdrEmail} • Iniciado em: ${startDate}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sdr-progress">
+                        <div class="progress-circle" style="background: conic-gradient(#38a169 ${session.progress * 3.6}deg, #e2e8f0 ${session.progress * 3.6}deg)">
+                            ${session.progress}%
+                        </div>
+                        <div class="status-badge status-${session.status === 'concluído' ? 'completed' : session.status === 'pausado' ? 'paused' : 'active'}">
+                            ${session.status}
+                        </div>
+                        <button class="expand-btn">▼</button>
+                    </div>
+                </div>
+                <div class="sdr-answers" id="answers-${session.sessionId}">
+                    ${renderAnswers(session)}
+                </div>
+            </div>
+        `;
+    }).join('');
     
-    closeModal();
+    sdrListEl.innerHTML = html;
 }
 
-// Atualizar progresso geral
-function updateProgress() {
-    const totalModules = Object.keys(moduleData).length;
-    const progress = Math.round((completedModules.length / totalModules) * 100);
+// Renderizar respostas
+function renderAnswers(session) {
+    if (Object.keys(session.modules).length === 0) {
+        return '<div class="no-data">Nenhuma resposta ainda</div>';
+    }
     
-    document.getElementById('progressFill').style.width = progress + '%';
-    document.getElementById('progressText').textContent = `${progress}% Concluído (${completedModules.length}/${totalModules} módulos)`;
-    
-    // Salvar progresso
-    saveToFirebase('progress', {
-        sessionId: sessionId,
-        progress: progress,
-        completedModules: completedModules.length,
-        totalModules: totalModules,
-        timestamp: new Date()
-    });
-    
-    // Verificar se terminou
-    if (progress === 100) {
-        setTimeout(() => {
-            saveToFirebase('training_completed', {
-                sessionId: sessionId,
-                completionTime: new Date(),
-                totalDuration: new Date() - trainingStartTime
-            });
+    return Object.entries(session.modules).map(([moduleNum, module]) => {
+        const moduleAnswers = module.answers.map(answer => {
+            const timestamp = answer.timestamp ? new Date(answer.timestamp.seconds ? answer.timestamp.seconds * 1000 : answer.timestamp).toLocaleString('pt-BR') : 'N/A';
             
-            alert('🎉 Parabéns! Você concluiu o treinamento SDR! Suas respostas foram enviadas para avaliação.');
-        }, 500);
+            return `
+                <div class="answer-item">
+                    <div class="question-text">${answer.question}</div>
+                    <div class="answer-text">${answer.answer}</div>
+                    <div class="answer-meta">
+                        <span>Respondido em: ${timestamp}</span>
+                        <span>Caracteres: ${answer.answer.length}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        return `
+            <div class="module-group">
+                <div class="module-header">
+                    <div class="module-title">${module.title}</div>
+                    <div class="module-meta">${module.answers.length} resposta(s)</div>
+                </div>
+                ${moduleAnswers}
+            </div>
+        `;
+    }).join('');
+}
+
+// Toggle respostas
+function toggleAnswers(sessionId) {
+    const answersEl = document.getElementById(`answers-${sessionId}`);
+    const expandBtn = document.querySelector(`[data-session="${sessionId}"] .expand-btn`);
+    
+    if (answersEl.classList.contains('expanded')) {
+        answersEl.classList.remove('expanded');
+        expandBtn.textContent = '▼';
+    } else {
+        answersEl.classList.add('expanded');
+        expandBtn.textContent = '▲';
     }
 }
 
-// Salvar dados no Firebase
-async function saveToFirebase(type, data) {
-    try {
-        await db.collection('sdr_training').add({
-            type: type,
-            data: data,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        console.log('Dados salvos:', type);
-    } catch (error) {
-        console.error('Erro ao salvar:', error);
-    }
+// Atualizar estatísticas
+function updateStats() {
+    const sessions = Object.values(sdrData);
+    
+    document.getElementById('totalSDRs').textContent = sessions.length;
+    document.getElementById('activeSessions').textContent = sessions.filter(s => s.status === 'ativo').length;
+    document.getElementById('completedTrainings').textContent = sessions.filter(s => s.status === 'concluído').length;
+    document.getElementById('totalAnswers').textContent = sessions.reduce((total, s) => total + s.answers.length, 0);
 }
 
-// Fechar modal clicando fora
-window.onclick = function(event) {
-    const modal = document.getElementById('trainingModal');
-    if (event.target === modal) {
-        closeModal();
-    }
+// Aplicar filtros
+function applyFilters() {
+    const statusFilter = document.getElementById('statusFilter').value;
+    const searchFilter = document.getElementById('searchSDR').value.toLowerCase();
+    const dateFilter = document.getElementById('dateFilter').value;
+    
+    const sdrItems = document.querySelectorAll('.sdr-item');
+    
+    sdrItems.forEach(item => {
+        const sessionId = item.dataset.session;
+        const session = sdrData[sessionId];
+        
+        let show = true;
+        
+        // Filtro por status
+        if (statusFilter && session.status !== statusFilter) {
+            show = false;
+        }
+        
+        // Filtro por busca
+        if (searchFilter && !session.sdrName.toLowerCase().includes(searchFilter) && !session.sdrEmail.toLowerCase().includes(searchFilter)) {
+            show = false;
+        }
+        
+        // Filtro por data
+        if (dateFilter && session.startTime) {
+            const sessionDate = new Date(session.startTime.seconds ? session.startTime.seconds * 1000 : session.startTime);
+            const filterDate = new Date(dateFilter);
+            if (sessionDate.toDateString() !== filterDate.toDateString()) {
+                show = false;
+            }
+        }
+        
+        item.style.display = show ? 'block' : 'none';
+    });
 }
 
-// Salvar estado ao sair
-window.addEventListener('beforeunload', function() {
-    if (currentSDR) {
-        saveToFirebase('session_pause', {
-            sessionId: sessionId,
-            pauseTime: new Date(),
-            status: 'pausado'
-        });
+// Exportar dados
+function exportData() {
+    const sessions = Object.values(sdrData);
+    const csvContent = "data:text/csv;charset=utf-8," + 
+        "Nome,Email,Status,Progresso,Módulo,Pergunta,Resposta,Data\n" +
+        sessions.map(session => 
+            session.answers.map(answer => 
+                `"${session.sdrName}","${session.sdrEmail}","${session.status}","${session.progress}%","${answer.moduleTitle}","${answer.question}","${answer.answer}","${new Date(answer.timestamp.seconds * 1000).toLocaleString('pt-BR')}"`
+            ).join('\n')
+        ).join('\n');
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `treinamento_sdr_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Auto-refresh a cada 30 segundos
+setInterval(() => {
+    if (document.getElementById('adminPanel').classList.contains('active')) {
+        loadData();
     }
-});
+}, 30000);
 </script>
 </body>
 </html>
