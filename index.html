@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treinamento SDR - Embalagens Conceito</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .progress-bar {
+            background: #f0f0f0;
+            height: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .activity-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .activity-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .activity-card h3 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .activity-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .activity-status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: #ffeaa7;
+            color: #d63031;
+        }
+
+        .status-completed {
+            background: #00b894;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: #666;
+            background: none;
+            border: none;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .task-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .task-section h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .task-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .task-input:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            margin-left: 10px;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+        }
+
+        .saved-indicator {
+            color: #00b894;
+            font-weight: bold;
+            margin-left: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .saved-indicator.show {
+            opacity: 1;
+        }
+
+        .objection-card {
+            background: #fff3cd;
+            border: 2px solid #ffeaa7;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .objection-card h5 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .response-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            min-height: 60px;
+        }
+
+        .persona-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .persona-form input {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .persona-form input:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .company-info {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #2196f3;
+        }
+
+        .company-info h3 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+
+        .company-info p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                margin: 20px;
+                max-width: calc(100% - 40px);
+                padding: 20px;
+            }
+            
+            .persona-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .activities-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Treinamento SDR</h1>
+            <p>Embalagens Conceito - Seu Parceiro em Soluções de Embalagem</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText">Progresso: 0/8 atividades concluídas</p>
+        </div>
+
+        <div class="activities-grid">
+            <div class="activity-card" onclick="openModal('modal1')">
+                <h3><span class="emoji">🔍</span> Missão Investigativa</h3>
+                <p>Descubra o perfil dos clientes e suas necessidades específicas</p>
+                <span class="activity-status status-pending" id="status1">Pendente</span>
+            </div>
+
+            <div class="activity-card" onclick="openModal('modal2')">
+                <h3><span class="emoji">👥</span> Criando Personas</h3>
+                <p>Desenvolva personas detalhadas dos seus clientes ideais</p>
+                <span class="activity-status status-pending" id="status2">Pendente</span>
+            </div>
+
+            <div class="activity-card" onclick="openModal('modal3')">
+                <h3><span class="emoji">🛡️</span> Simulador de Objeções</h3>
+                <p>Pratique respostas para as objeções mais comuns</p>
+                <span class="activity-status status-pending" id="status3">Pendente</span>
+            </div>
+
+            <div class="activity-card" onclick="openModal('modal4')">
+                <h3><span class="emoji">🎉</span> Projeto Linha Sazonal</h3>
+                <p>Crie estratégias de vendas para datas comemorativas</p>
+                <span class="activity-status status-pending" id="status4">Pendente</span>
+            </div>
+
+            <div class="activity-card" onclick="openModal('modal5')">
+                <h3><span class="emoji">🕵️</span> Auditoria Competitiva</h3>
+                <p>Analise a concorrência e identifique nossos diferenciais</p>
+                <span class="activity-status status-pending" id="status5">Pendente</span>
+            </div>
+
+            <div class="activity-card" onclick="openModal('modal6')">
+                <h3><span class="emoji">🧠</span> Gatilhos Mentais</h3>
+                <p>Domine as técnicas psicológicas de persuasão em vendas</p>
+                <span class="activity-status status-pending" id="status6">Pendente</span>
+            </div>
+
+            <div class="activity-card" onclick="openModal('modal7')">
+                <h3><span class="emoji">❓</span> Roteiro de Descoberta</h3>
+                <p>Desenvolva perguntas estratégicas para conhecer o cliente</p>
+                <span class="activity-status status-pending" id="status7">Pendente</span>
+            </div>
+
+            <div class="activity-card" onclick="openModal('modal8')">
+                <h3><span class="emoji">💰</span> Calculadora de ROI</h3>
+                <p>Aprenda a demonstrar o valor das nossas embalagens</p>
+                <span class="activity-status status-pending" id="status8">Pendente</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 1: Missão Investigativa -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('modal1')">&times;</button>
+            <h2>🔍 Missão Investigativa do Cliente</h2>
+            
+            <div class="company-info">
+                <h3>Sobre a Embalagens Conceito</h3>
+                <p><strong>Fundada:</strong> Setembro de 2016</p>
+                <p><strong>Segmentos:</strong> Confeitaria, fastfood e datas sazonais (Páscoa e Natal)</p>
+                <p><strong>Produtos:</strong> Caixas e forminhas para doces, embalagens para ovos de colher e panetones, sacolas, tags, adesivos, cestas de natal e páscoa, caixas transporte de alimentos em micro ondulado</p>
+                <p><strong>Localização:</strong> Toledo, região oeste do Paraná</p>
+            </div>
+
+            <div class="task-section">
+                <h4>Sua Missão:</h4>
+                <p>Pesquise e analise estes 5 tipos de clientes. Para cada um, descubra:</p>
+                <ul style="margin: 15px 0; padding-left: 20px;">
+                    <li>Que tipo de negócio cada um tem</li>
+                    <li>Quais produtos da Embalagens Conceito eles mais comprariam</li>
+                    <li>Qual a principal "dor" de cada segmento</li>
+                    <li>Como você abordaria cada um</li>
+                </ul>
+            </div>
+
+            <div class="task-section">
+                <h4>Cliente 1: Confeitaria Artesanal</h4>
+                <textarea class="task-input" id="client1" placeholder="Descreva o tipo de negócio, produtos ideais, principais dores e abordagem..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>Cliente 2: Food Truck Gourmet</h4>
+                <textarea class="task-input" id="client2" placeholder="Descreva o tipo de negócio, produtos ideais, principais dores e abordagem..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>Cliente 3: Doceira Domiciliar</h4>
+                <textarea class="task-input" id="client3" placeholder="Descreva o tipo de negócio, produtos ideais, principais dores e abordagem..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>Cliente 4: Padaria de Bairro</h4>
+                <textarea class="task-input" id="client4" placeholder="Descreva o tipo de negócio, produtos ideais, principais dores e abordagem..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>Cliente 5: Empresa de Eventos</h4>
+                <textarea class="task-input" id="client5" placeholder="Descreva o tipo de negócio, produtos ideais, principais dores e abordagem..."></textarea>
+            </div>
+
+            <button class="btn" onclick="saveActivity(1)">Salvar Respostas</button>
+            <span class="saved-indicator" id="saved1">✓ Salvo!</span>
+        </div>
+    </div>
+
+    <!-- Modal 2: Criando Personas -->
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('modal2')">&times;</button>
+            <h2>👥 Criando Personas de Clientes</h2>
+            
+            <div class="task-section">
+                <h4>Persona 1: O Confeiteiro Iniciante</h4>
+                <div class="persona-form">
+                    <input type="text" id="persona1_name" placeholder="Nome da persona">
+                    <input type="text" id="persona1_age" placeholder="Idade">
+                    <input type="text" id="persona1_business" placeholder="Tipo de negócio">
+                    <input type="text" id="persona1_experience" placeholder="Tempo de experiência">
+                </div>
+                <textarea class="task-input" id="persona1_details" placeholder="Descreva suas principais dores, objetivos, medos e como nossas embalagens podem ajudar..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>Persona 2: A Doceira Experiente</h4>
+                <div class="persona-form">
+                    <input type="text" id="persona2_name" placeholder="Nome da persona">
+                    <input type="text" id="persona2_age" placeholder="Idade">
+                    <input type="text" id="persona2_business" placeholder="Tipo de negócio">
+                    <input type="text" id="persona2_experience" placeholder="Tempo de experiência">
+                </div>
+                <textarea class="task-input" id="persona2_details" placeholder="Descreva suas principais dores, objetivos, medos e como nossas embalagens podem ajudar..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>Persona 3: O Dono de Food Truck</h4>
+                <div class="persona-form">
+                    <input type="text" id="persona3_name" placeholder="Nome da persona">
+                    <input type="text" id="persona3_age" placeholder="Idade">
+                    <input type="text" id="persona3_business" placeholder="Tipo de negócio">
+                    <input type="text" id="persona3_experience" placeholder="Tempo de experiência">
+                </div>
+                <textarea class="task-input" id="persona3_details" placeholder="Descreva suas principais dores, objetivos, medos e como nossas embalagens podem ajudar..."></textarea>
+            </div>
+
+            <button class="btn" onclick="saveActivity(2)">Salvar Personas</button>
+            <span class="saved-indicator" id="saved2">✓ Salvo!</span>
+        </div>
+    </div>
+
+    <!-- Modal 3: Simulador de Objeções -->
+    <div id="modal3" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('modal3')">&times;</button>
+            <h2>🛡️ Simulador de Objeções</h2>
+            
+            <p style="margin-bottom: 30px;">Para cada objeção, crie 3 respostas diferentes. Pense em abordar de forma educativa, emocional e lógica.</p>
+
+            <div class="objection-card">
+                <h5>Objeção 1: "Está muito caro"</h5>
+                <textarea class="response-input" id="obj1_resp1" placeholder="Resposta 1 (Educativa - mostre o valor)..."></textarea>
+                <textarea class="response-input" id="obj1_resp2" placeholder="Resposta 2 (Emocional - conecte com o sentimento)..."></textarea>
+                <textarea class="response-input" id="obj1_resp3" placeholder="Resposta 3 (Lógica - compare custos)..."></textarea>
+            </div>
+
+            <div class="objection-card">
+                <h5>Objeção 2: "Já tenho fornecedor"</h5>
+                <textarea class="response-input" id="obj2_resp1" placeholder="Resposta 1 (Diferenciação)..."></textarea>
+                <textarea class="response-input" id="obj2_resp2" placeholder="Resposta 2 (Oportunidade de teste)..."></textarea>
+                <textarea class="response-input" id="obj2_resp3" placeholder="Resposta 3 (Backup/Emergência)..."></textarea>
+            </div>
+
+            <div class="objection-card">
+                <h5>Objeção 3: "Não preciso agora"</h5>
+                <textarea class="response-input" id="obj3_resp1" placeholder="Resposta 1 (Urgência)..."></textarea>
+                <textarea class="response-input" id="obj3_resp2" placeholder="Resposta 2 (Planejamento)..."></textarea>
+                <textarea class="response-input" id="obj3_resp3" placeholder="Resposta 3 (Oportunidade perdida)..."></textarea>
+            </div>
+
+            <div class="objection-card">
+                <h5>Objeção 4: "Vou pensar"</h5>
+                <textarea class="response-input" id="obj4_resp1" placeholder="Resposta 1 (Descobrir a real objeção)..."></textarea>
+                <textarea class="response-input" id="obj4_resp2" placeholder="Resposta 2 (Criar senso de urgência)..."></textarea>
+                <textarea class="response-input" id="obj4_resp3" placeholder="Resposta 3 (Oferecer ajuda na decisão)..."></textarea>
+            </div>
+
+            <button class="btn" onclick="saveActivity(3)">Salvar Respostas</button>
+            <span class="saved-indicator" id="saved3">✓ Salvo!</span>
+        </div>
+    </div>
+
+    <!-- Modal 4: Projeto Linha Sazonal -->
+    <div id="modal4" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('modal4')">&times;</button>
+            <h2>🎉 Projeto Linha Sazonal</h2>
+            
+            <div class="task-section">
+                <h4>Escolha uma data comemorativa:</h4>
+                <select id="seasonal_date" style="padding: 12px; border-radius: 8px; border: 2px solid #e0e0e0; font-size: 16px; width: 100%; margin-bottom: 20px;">
+                    <option value="">Selecione uma data</option>
+                    <option value="pascoa">Páscoa</option>
+                    <option value="festa_junina">Festa Junina</option>
+                    <option value="dia_das_maes">Dia das Mães</option>
+                    <option value="dia_dos_namorados">Dia dos Namorados</option>
+                    <option value="natal">Natal</option>
+                    <option value="dia_das_criancas">Dia das Crianças</option>
+                </select>
+            </div>
+
+            <div class="task-section">
+                <h4>Pesquisa de Tendências</h4>
+                <textarea class="task-input" id="seasonal_trends" placeholder="Quais são as tendências para esta data? Que cores, formatos e temas estão em alta?"></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>Pitch de Vendas</h4>
+                <textarea class="task-input" id="seasonal_pitch" placeholder="Crie um pitch de 2 minutos para vender nossas embalagens sazonais..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>5 Argumentos de Compra AGORA</h4>
+                <textarea class="task-input" id="seasonal_arguments" placeholder="Liste 5 razões convincentes de por que o cliente deve comprar AGORA e não deixar para depois..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>Timing Ideal</h4>
+                <textarea class="task-input" id="seasonal_timing" placeholder="Quando é o momento ideal para abordar clientes para esta data? Quantos meses antes? Por quê?"></textarea>
+            </div>
+
+            <button class="btn" onclick="saveActivity(4)">Salvar Projeto</button>
+            <span class="saved-indicator" id="saved4">✓ Salvo!</span>
+        </div>
+    </div>
+
+    <!-- Modal 5: Auditoria Competitiva -->
+    <div id="modal5" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('modal5')">&times;</button>
+            <h2>🕵️ Auditoria Competitiva</h2>
+            
+            <div class="task-section">
+                <h4>Concorrente 1</h4>
+                <input type="text" id="comp1_name" placeholder="Nome da empresa" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #e0e0e0; margin-bottom: 15px;">
+                <textarea class="task-input" id="comp1_analysis" placeholder="Pontos fortes, pontos fracos, preços (se disponível), diferenciais..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>Concorrente 2</h4>
+                <input type="text" id="comp2_name" placeholder="Nome da empresa" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #e0e0e0; margin-bottom: 15px;">
+                <textarea class="task-input" id="comp2_analysis" placeholder="Pontos fortes, pontos fracos, preços (se disponível), diferenciais..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>Concorrente 3</h4>
+                <input type="text" id="comp3_name" placeholder="Nome da empresa" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #e0e0e0; margin-bottom: 15px;">
+                <textarea class="task-input" id="comp3_analysis" placeholder="Pontos fortes, pontos fracos, preços (se disponível), diferenciais..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>Como a Embalagens Conceito se Diferencia</h4>
+                <textarea class="task-input" id="our_differentiation" placeholder="Baseado na análise acima, liste nossos principais diferenciais competitivos..."></textarea>
+            </div>
+
+            <button class="btn" onclick="saveActivity(5)">Salvar Auditoria</button>
+            <span class="saved-indicator" id="saved5">✓ Salvo!</span>
+        </div>
+    </div>
+
+    <!-- Modal 6: Gatilhos Mentais -->
+    <div id="modal6" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('modal6')">&times;</button>
+            <h2>🧠 Jogo dos Gatilhos Mentais</h2>
+            
+            <p style="margin-bottom: 30px;">Para cada gatilho mental, crie um exemplo prático de como usar ao vender embalagens da Embalagens Conceito:</p>
+
+            <div class="task-section">
+                <h4>1. Escassez</h4>
+                <p style="color: #666; margin-bottom: 15px;">Exemplo: "Temos apenas 50 unidades desta linha especial de Natal em estoque..."</p>
+                <textarea class="task-input" id="trigger1" placeholder="Crie seu exemplo usando escassez..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>2. Urgência</h4>
+                <p style="color: #666; margin-bottom: 15px;">Exemplo: "A promoção de Páscoa termina na sexta-feira..."</p>
+                <textarea class="task-input" id="trigger2" placeholder="Crie seu exemplo usando urgência..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>3. Prova Social</h4>
+                <p style="color: #666; margin-bottom: 15px;">Exemplo: "Mais de 500 confeitarias já confiam em nossas embalagens..."</p>
+                <textarea class="task-input" id="trigger3" placeholder="Crie seu exemplo usando prova social..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>4. Autoridade</h4>
+                <p style="color: #666; margin-bottom: 15px;">Exemplo: "Nossos 8 anos de experiência no mercado nos permite..."</p>
+                <textarea class="task-input" id="trigger4" placeholder="Crie seu exemplo usando autoridade..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>5. Reciprocidade</h4>
+                <p style="color: #666; margin-bottom: 15px;">Exemplo: "Como você é cliente especial, vou incluir 10% de desconto..."</p>
+                <textarea class="task-input" id="trigger5" placeholder="Crie seu exemplo usando reciprocidade..."></textarea>
+            </div>
+
+            <button class="btn" onclick="saveActivity(6)">Salvar Gatilhos</button>
+            <span class="saved-indicator" id="saved6">✓ Salvo!</span>
+        </div>
+    </div>
+
+    <!-- Modal 7: Roteiro de Descoberta -->
+    <div id="modal7" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('modal7')">&times;</button>
+            <h2>❓ Roteiro de Descoberta</h2>
+            
+            <div class="task-section">
+                <h4>Perguntas sobre o Negócio</h4>
+                <textarea class="task-input" id="business_questions" placeholder="Liste 5 perguntas para descobrir mais sobre o negócio do cliente (ex: Qual produto você mais vende? Há quanto tempo está no mercado?)"></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>Perguntas sobre Sazonalidade</h4>
+                <textarea class="task-input" id="seasonal_questions" placeholder="Liste 5 perguntas sobre sazonalidade e épocas de maior movimento..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>Perguntas sobre Dores/Problemas</h4>
+                <textarea class="task-input" id="pain_questions" placeholder="Liste 5 perguntas para descobrir as principais dificuldades do cliente com embalagens..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>Perguntas sobre Decisão de Compra</h4>
+                <textarea class="task-input" id="decision_questions" placeholder="Liste 5 perguntas para entender como o cliente escolhe fornecedores..."></textarea>
+            </div>
+
+            <button class="btn" onclick="saveActivity(7)">Salvar Roteiro</button>
+            <span class="saved-indicator" id="saved7">✓ Salvo!</span>
+        </div>
+    </div>
+
+    <!-- Modal 8: Calculadora de ROI -->
+    <div id="modal8" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('modal8')">&times;</button>
+            <h2>💰 Calculadora de ROI do Cliente</h2>
+            
+            <div class="task-section">
+                <h4>Cenário 1: Aumento de Preço</h4>
+                <p style="color: #666; margin-bottom: 15px;">Como uma embalagem bonita pode justificar um preço maior?</p>
+                <textarea class="task-input" id="roi_price" placeholder="Crie um exemplo: 'Se você vende 100 brigadeiros por R$ 2,00 cada com embalagem simples, com nossa embalagem premium você pode cobrar R$ 2,50. Isso representa...'"></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>Cenário 2: Redução de Perdas</h4>
+                <p style="color: #666; margin-bottom: 15px;">Como nossas embalagens reduzem perdas no transporte?</p>
+                <textarea class="task-input" id="roi_losses" placeholder="Crie um cálculo mostrando economia com menos produtos danificados..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>Cenário 3: Percepção de Qualidade</h4>
+                <p style="color: #666; margin-bottom: 15px;">Como uma boa embalagem melhora a percepção do produto?</p>
+                <textarea class="task-input" id="roi_perception" placeholder="Explique o impacto psicológico de uma boa embalagem no cliente final..."></textarea>
+            </div>
+
+            <div class="task-section">
+                <h4>Cenário 4: Marketing Gratuito</h4>
+                <p style="color: #666; margin-bottom: 15px;">Como a embalagem funciona como propaganda?</p>
+                <textarea class="task-input" id="roi_marketing" placeholder="Calcule o valor de ter sua marca sendo vista por mais pessoas..."></textarea>
+            </div>
+
+            <button class="btn" onclick="saveActivity(8)">Salvar Calculadora</button>
+            <span class="saved-indicator" id="saved8">✓ Salvo!</span>
+        </div>
+    </div>
+
+    <script>
+        // Sistema de armazenamento local
+        let activityData = {};
+        let completedActivities = new Set();
+
+        // Carregar dados salvos ao inicializar
+        window.onload = function() {
+            loadSavedData();
+            updateProgress();
+        };
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function saveActivity(activityNumber) {
+            let data = {};
+            
+            switch(activityNumber) {
+                case 1:
+                    data = {
+                        client1: document.getElementById('client1').value,
+                        client2: document.getElementById('client2').value,
+                        client3: document.getElementById('client3').value,
+                        client4: document.getElementById('client4').value,
+                        client5: document.getElementById('client5').value
+                    };
+                    break;
+                    
+                case 2:
+                    data = {
+                        persona1: {
+                            name: document.getElementById('persona1_name').value,
+                            age: document.getElementById('persona1_age').value,
+                            business: document.getElementById('persona1_business').value,
+                            experience: document.getElementById('persona1_experience').value,
+                            details: document.getElementById('persona1_details').value
+                        },
+                        persona2: {
+                            name: document.getElementById('persona2_name').value,
+                            age: document.getElementById('persona2_age').value,
+                            business: document.getElementById('persona2_business').value,
+                            experience: document.getElementById('persona2_experience').value,
+                            details: document.getElementById('persona2_details').value
+                        },
+                        persona3: {
+                            name: document.getElementById('persona3_name').value,
+                            age: document.getElementById('persona3_age').value,
+                            business: document.getElementById('persona3_business').value,
+                            experience: document.getElementById('persona3_experience').value,
+                            details: document.getElementById('persona3_details').value
+                        }
+                    };
+                    break;
+                    
+                case 3:
+                    data = {
+                        obj1: [
+                            document.getElementById('obj1_resp1').value,
+                            document.getElementById('obj1_resp2').value,
+                            document.getElementById('obj1_resp3').value
+                        ],
+                        obj2: [
+                            document.getElementById('obj2_resp1').value,
+                            document.getElementById('obj2_resp2').value,
+                            document.getElementById('obj2_resp3').value
+                        ],
+                        obj3: [
+                            document.getElementById('obj3_resp1').value,
+                            document.getElementById('obj3_resp2').value,
+                            document.getElementById('obj3_resp3').value
+                        ],
+                        obj4: [
+                            document.getElementById('obj4_resp1').value,
+                            document.getElementById('obj4_resp2').value,
+                            document.getElementById('obj4_resp3').value
+                        ]
+                    };
+                    break;
+                    
+                case 4:
+                    data = {
+                        date: document.getElementById('seasonal_date').value,
+                        trends: document.getElementById('seasonal_trends').value,
+                        pitch: document.getElementById('seasonal_pitch').value,
+                        arguments: document.getElementById('seasonal_arguments').value,
+                        timing: document.getElementById('seasonal_timing').value
+                    };
+                    break;
+                    
+                case 5:
+                    data = {
+                        comp1: {
+                            name: document.getElementById('comp1_name').value,
+                            analysis: document.getElementById('comp1_analysis').value
+                        },
+                        comp2: {
+                            name: document.getElementById('comp2_name').value,
+                            analysis: document.getElementById('comp2_analysis').value
+                        },
+                        comp3: {
+                            name: document.getElementById('comp3_name').value,
+                            analysis: document.getElementById('comp3_analysis').value
+                        },
+                        differentiation: document.getElementById('our_differentiation').value
+                    };
+                    break;
+                    
+                case 6:
+                    data = {
+                        trigger1: document.getElementById('trigger1').value,
+                        trigger2: document.getElementById('trigger2').value,
+                        trigger3: document.getElementById('trigger3').value,
+                        trigger4: document.getElementById('trigger4').value,
+                        trigger5: document.getElementById('trigger5').value
+                    };
+                    break;
+                    
+                case 7:
+                    data = {
+                        business: document.getElementById('business_questions').value,
+                        seasonal: document.getElementById('seasonal_questions').value,
+                        pain: document.getElementById('pain_questions').value,
+                        decision: document.getElementById('decision_questions').value
+                    };
+                    break;
+                    
+                case 8:
+                    data = {
+                        price: document.getElementById('roi_price').value,
+                        losses: document.getElementById('roi_losses').value,
+                        perception: document.getElementById('roi_perception').value,
+                        marketing: document.getElementById('roi_marketing').value
+                    };
+                    break;
+            }
+            
+            // Verificar se a atividade está completa
+            let isComplete = checkActivityComplete(activityNumber, data);
+            
+            if (isComplete) {
+                completedActivities.add(activityNumber);
+                document.getElementById('status' + activityNumber).textContent = 'Concluída';
+                document.getElementById('status' + activityNumber).className = 'activity-status status-completed';
+            }
+            
+            activityData['activity' + activityNumber] = data;
+            
+            // Mostrar indicador de salvo
+            let savedIndicator = document.getElementById('saved' + activityNumber);
+            savedIndicator.classList.add('show');
+            setTimeout(() => {
+                savedIndicator.classList.remove('show');
+            }, 2000);
+            
+            updateProgress();
+        }
+
+        function checkActivityComplete(activityNumber, data) {
+            switch(activityNumber) {
+                case 1:
+                    return data.client1 && data.client2 && data.client3 && data.client4 && data.client5;
+                    
+                case 2:
+                    return data.persona1.name && data.persona1.details && 
+                           data.persona2.name && data.persona2.details && 
+                           data.persona3.name && data.persona3.details;
+                           
+                case 3:
+                    return data.obj1.every(resp => resp.length > 0) && 
+                           data.obj2.every(resp => resp.length > 0) && 
+                           data.obj3.every(resp => resp.length > 0) && 
+                           data.obj4.every(resp => resp.length > 0);
+                           
+                case 4:
+                    return data.date && data.trends && data.pitch && data.arguments && data.timing;
+                    
+                case 5:
+                    return data.comp1.name && data.comp1.analysis && 
+                           data.comp2.name && data.comp2.analysis && 
+                           data.comp3.name && data.comp3.analysis && 
+                           data.differentiation;
+                           
+                case 6:
+                    return data.trigger1 && data.trigger2 && data.trigger3 && data.trigger4 && data.trigger5;
+                    
+                case 7:
+                    return data.business && data.seasonal && data.pain && data.decision;
+                    
+                case 8:
+                    return data.price && data.losses && data.perception && data.marketing;
+                    
+                default:
+                    return false;
+            }
+        }
+
+        function updateProgress() {
+            let completed = completedActivities.size;
+            let total = 8;
+            let percentage = (completed / total) * 100;
+            
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `Progresso: ${completed}/${total} atividades concluídas`;
+            
+            if (completed === total) {
+                setTimeout(() => {
+                    alert('🎉 Parabéns! Você concluiu todas as atividades do treinamento SDR! Agora você está pronta para começar a vender com confiança!');
+                }, 500);
+            }
+        }
+
+        function loadSavedData() {
+            // Simulação de carregamento - em uma aplicação real, isso viria de um servidor
+            // Por enquanto, mantém os dados apenas durante a sessão
+        }
+
+        // Fechar modal ao clicar fora dele
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Adicionar funcionalidade de download dos dados
+        function downloadResults() {
+            let results = {
+                completedActivities: Array.from(completedActivities),
+                activityData: activityData,
+                completionDate: new Date().toLocaleString('pt-BR')
+            };
+            
+            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(results, null, 2));
+            let downloadElement = document.createElement('a');
+            downloadElement.setAttribute("href", dataStr);
+            downloadElement.setAttribute("download", "treinamento_sdr_resultados.json");
+            document.body.appendChild(downloadElement);
+            downloadElement.click();
+            document.body.removeChild(downloadElement);
+        }
+
+        // Auto-save funcionalidade
+        document.addEventListener('input', function(e) {
+            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+                // Auto-save após 2 segundos de inatividade
+                clearTimeout(window.autoSaveTimeout);
+                window.autoSaveTimeout = setTimeout(() => {
+                    // Identificar qual atividade está sendo editada e salvar
+                    let modalId = e.target.closest('.modal')?.id;
+                    if (modalId) {
+                        let activityNumber = parseInt(modalId.replace('modal', ''));
+                        if (activityNumber >= 1 && activityNumber <= 8) {
+                            saveActivity(activityNumber);
+                        }
+                    }
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+</html>
